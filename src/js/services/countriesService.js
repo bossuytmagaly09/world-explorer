@@ -18,5 +18,4 @@ export async function fetchAllCountries() {
     const res = await fetch(COUNTRIES_API_URL);
     if (!res.ok) throw new Error("fetchAllCountries() is nog niet geïmplementeerd");
     return await res.json();
-
 }

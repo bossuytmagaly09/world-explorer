@@ -47,7 +47,6 @@ export async function showCountryDetail(country, isFavorite) {
     // - vlag src/alt instellen
     // - detailsDl leegmaken en opnieuw vullen met dt/dd voor:
     //   hoofdstad, regio, populatie, talen, valuta
-
     clearElement(detailsDl);
     clearElement(currencyInfo);
 
