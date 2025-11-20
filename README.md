@@ -3,6 +3,8 @@ Starterproject voor het groepswerk **World Explorer Dashboard**.
 ## Stack - Vite (root: `src`) - Vanilla JavaScript (ES modules) - Bootstrap 5 - Leaflet.js + OpenStreetMap - SCSS
 ## Scripts
 ```bash 
+student A: Nikita
+student B: Magaly
 npm install 
 npm run dev      
 npm run build    
