@@ -30,12 +30,12 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
         const card = createElement("div", "card h-100 shadow-sm border-0");
         const body = createElement("div", "card-body d-flex flex-column");
 
+
         // TODO:
         // - vlag, naam, regio, populatie tonen
         // - knop "Details" die onCountryClick(country) oproept
         // - knop/icon voor favoriet (onFavoriteToggle(country))
         // - check of dit land in favorites zit (kleur/icoon aanpassen)
-
         card.appendChild(body);
         col.appendChild(card);
         container.appendChild(col);
