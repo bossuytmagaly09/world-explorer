@@ -3,7 +3,6 @@ import '../scss/styles.scss'
 
 // Import all of Bootstrap’s JS
 import * as bootstrap from 'bootstrap'
-//test123
 
 import { fetchAllCountries } from "./services/countriesService.js";
 import { initMap } from "./services/mapService.js";
