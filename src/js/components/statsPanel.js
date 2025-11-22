@@ -36,7 +36,42 @@ export function renderStats(stats) {
 // TODO:
 // - bereken relatieve hoogtes (bijv. in procent)
 // - maak voor elk stat een "bar" div
+    const values = [
+        {label: "Aantal landen", value: totalCountries, color: "#bcd4ff"},
+        {label: "Gem. populatie", value: averagePopulation, color: "#cde7d6"},
+        {label: "Populatie favorieten", value: favoritesPopulation, color: "#ffeab5"}
+    ];
+
+    const max = Math.max(...values.map(v => v.value));
+
+    values.forEach(stat => {
+        const col = createElement("div", "col-md-4 text-center");
+
+        const barContainer = createElement(
+            "div",
+            "border rounded p-2 mb-2 d-flex align-itmens-end",
+        );
+        barContainer.style.height = "120px";
+        barContainer.style.backgroundColor = "#fafafa";
+
+        const bar = createElement("div");
+        bar.style.width = "100%";
+        bar.style.backgroundColor = stat.color;
+
+        const heightPrecent = (stat.value / max) * 100;
+        bar.style.height = `${heightPrecent}%`;
+
+        barContainer.appendChild(bar);
+
+        const label = createElement("div", "small text-muted", stat.label);
+
+        col.appendChild(barContainer);
+        col.appendChild(label);
+
+        barRow.appendChild(col);
+    })
     panel.appendChild(barRow);
+
 }
 function createStatCard(label, valueText) {
     const col = createElement("div", "col-md-4");
