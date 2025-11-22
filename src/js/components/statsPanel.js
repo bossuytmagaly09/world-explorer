@@ -37,6 +37,7 @@ export function renderStats(stats) {
 // - bereken relatieve hoogtes (bijv. in procent)
 // - maak voor elk stat een "bar" div
     panel.appendChild(barRow);
+
 }
 function createStatCard(label, valueText) {
     const col = createElement("div", "col-md-4");
