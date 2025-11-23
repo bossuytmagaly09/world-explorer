@@ -68,6 +68,19 @@ function applyFilters() {
     // const region = regionSelect.value;
     // filteredCountries = allCountries.filter(...);
 
+    const term = searchInput.value.trim().toLowerCase();
+    const region = regionSelect.value;
+
+    filteredCountries = allCountries.filter(country => {
+        const matchTerm =
+            country.name.common.toLowerCase().includes(term);
+
+        const matchRegion =
+            region === "all" || country.region === region;
+
+        return matchTerm && matchRegion;
+    });
+
     renderCountryList({
         countries: filteredCountries,
         favorites,
