@@ -4,7 +4,6 @@ import '../scss/styles.scss'
 // Import all of Bootstrap’s JS
 import * as bootstrap from 'bootstrap'
 
-
 import { fetchAllCountries } from "./services/countriesService.js";
 import { initMap } from "./services/mapService.js";
 import { loadFavorites, saveFavorites } from "./services/storageService.js";
