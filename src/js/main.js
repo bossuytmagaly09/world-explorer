@@ -77,7 +77,7 @@ function applyFilters() {
             country.name.common.toLowerCase().includes(term);
 
         const matchRegion =
-            region === "Alle regio's" || country.region === region;
+            region === "all" || country.region === region;
 
         return matchTerm && matchRegion;
     });
