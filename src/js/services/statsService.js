@@ -1,4 +1,4 @@
-const EXCHANGE_API_BASE = "https://api.exchangerate.host/latest";
+const EXCHANGE_API = "https://open.er-api.com/v6/latest";
 /**
  * Haal wisselkoers op van EUR naar currencyCode.
  * @param {string} currencyCode bijv. "USD"
@@ -10,7 +10,22 @@ export async function fetchRateToEuro(currencyCode) {
 // - gebruik fetch + async/await
 // - haal de juiste rate uit data.rates[currencyCode]
 // - geef null terug bij fout
-    return null;
+    try{
+        const url = `${EXCHANGE_API_BASE}/EUR?symbols=${currencyCode}`;
+
+        const resp = await fetch(url);
+        if (!resp.ok) return null
+
+        const data = await resp.json();
+
+        const rate = data.rates?.[currencyCode];
+        return typeof rate === "number" ? rate : null;
+
+    }catch(err){
+        console.error("Fout bij wisselkoers:", err)
+        return null;
+    }
+
 }
 /**
  * Bereken statistieken op basis van gefilterde landen en favorieten.
@@ -22,10 +37,21 @@ export function calculateStats(countries, favorites) {
     // - totalCountries
     // - averagePopulation
     // - favoritesPopulation
+    const totalCountries = countries.length;
+
+    const averagePopulation = totalCountries > 0
+        ? Math.round(
+            countries.reduce((sum, c) => sum + (c.population ?? 0), 0) /
+            totalCountries
+        )
+        : 0;
+
+    const favoritesPopulation = favorites.reduce((sum, fav) => sum + (fav.population ?? 0),0);
+
 
     return {
-        totalCountries: 0,
-        averagePopulation: 0,
-        favoritesPopulation: 0
+        totalCountries,
+        averagePopulation,
+        favoritesPopulation
     };
 }
