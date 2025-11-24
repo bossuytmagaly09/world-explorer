@@ -36,7 +36,7 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
         // - knop/icon voor favoriet (onFavoriteToggle(country))
         // - check of dit land in favorites zit (kleur/icoon aanpassen)
         // FAVORIET
-        const isFavorirte = favorites.some(fav => fav.cca3 === country.cca3);
+        const isFavorite = favorites.some(fav => fav.cca3 === country.cca3);
         // VLAG
         const flag = createElement("img", {
             src: country.flags?.png || "",
@@ -73,8 +73,8 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
 
         const favBtn = createElement(
             "button",
-            `btn btn-sm mt-2 ${isFavorirte ? "btn-warning" : "btn-outline-warning"}`,
-            isFavorirte ? "★ Favoriet" : "☆ Favoriet"
+            `btn btn-sm mt-2 ${isFavorite ? "btn-warning" : "btn-outline-warning"}`,
+            isFavorite ? "★ Favoriet" : "☆ Favoriet"
         );
         favBtn.addEventListener("click", () => onFavoriteToggle(country));
 
