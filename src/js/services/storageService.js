@@ -12,9 +12,9 @@ export function loadFavorites() {
         const json = localStorage.getItem(STORAGE_KEY);
         if(!json) return [];
 
-        const data = json.parse(json);
+        const data = JSON.parse(json);
 
-        return array.isArray(data) ? data : [];
+        return Array.isArray(data) ? data : [];
     }catch (err){
         console.error("Fout bij het lezen van favorieten.", err);
         return [];
@@ -29,12 +29,10 @@ export function saveFavorites(favorites) {
 // TODO:
 // - stringify favorites
 // - schrijf naar localStorage
-    export function saveFavorites(favorites) {
-        try {
-            const json = JSON.stringify(favorites);
-            localStorage.setItem(STORAGE_KEY, json);
-        } catch (err) {
-            console.error("Fout bij opslaan van favorieten:", err);
-        }
+    try {
+        const json = JSON.stringify(favorites);
+        localStorage.setItem(STORAGE_KEY, json);
+    } catch (err) {
+        console.error("Fout bij opslaan van favorieten:", err);
     }
 }
