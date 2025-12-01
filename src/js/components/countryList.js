@@ -45,6 +45,16 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
                                 <button class="btn btn-outline-warning btn-sm" type="button">☆ Favoriet</button>
                           </div>`;
 
+        const detailsBtn = body.querySelector(".btn.btn-primary");
+        const favBtn = body.querySelector(".btn.btn-outline-warning");
+
+        detailsBtn.addEventListener("click", () => {
+            onCountryClick(country);
+        });
+
+        favBtn.addEventListener("click", () => {
+            onFavoriteToggle(country);
+        });
 
         card.appendChild(body);
         col.appendChild(card);
