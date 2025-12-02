@@ -1,51 +1,71 @@
+// components/statsPanel.js
 import { clearElement, createElement } from "../utils/dom.js";
+import { Chart, registerables } from "chart.js";
 
-/**
- * Render statistieken in #stats_panel.
- * @param {Object} stats
- * @param {number} stats.totalCountries
- * @param {number} stats.averagePopulation
- * @param {number} stats.favoritesPopulation
- */
-export function renderStats(stats) {
-    const panel = document.querySelector("#stats_panel");
-    if (!panel) return;
+Chart.register(...registerables);
 
-    clearElement(panel);
+let statsChart = null;
 
-    const { totalCountries, averagePopulation, favoritesPopulation } = stats;
+export function renderStats(stats = {}) {
+    const container = document.querySelector("#stats_panel");
+    if (!container) return;
 
-    // Kaarten met cijfers
-    const cardsRow = createElement("div", "row gy-3 mb-3");
+    clearElement(container);
 
-    const card1 = createStatCard("Aantal landen", totalCountries.toString());
-    const card2 = createStatCard(
-        "Gemiddelde populatie",
-        averagePopulation.toLocaleString("nl-BE")
-    );
-    const card3 = createStatCard(
-        "Totale populatie favorieten",
-        favoritesPopulation.toLocaleString("nl-BE")
-    );
-    cardsRow.appendChild(card1);
-    cardsRow.appendChild(card2);
-    cardsRow.appendChild(card3);
-    panel.appendChild(cardsRow);
-// Eenvoudige bar chart
-    const barRow = createElement("div", "row bar-chart-row");
-// TODO:
-// - bereken relatieve hoogtes (bijv. in procent)
-// - maak voor elk stat een "bar" div
-    panel.appendChild(barRow);
+    const cardsWrapper = createElement("div", "row g-3 mb-3");
+    container.appendChild(cardsWrapper);
 
-}
-function createStatCard(label, valueText) {
-    const col = createElement("div", "col-md-4");
-    const card = createElement("div", "border rounded p-3 h-100");
-    const labelEl = createElement("div", "small text-muted mb-1", label);
-    const valueEl = createElement("div", "h5 mb-0", valueText);
-    card.appendChild(labelEl);
-    card.appendChild(valueEl);
-    col.appendChild(card);
-    return col;
+    const total = stats.totalCountries ?? 0;
+    const avg = stats.averagePopulation ?? 0;
+    const fav = stats.favoritesPopulation ?? 0;
+
+    function createStatCard(title, value){
+        const col = createElement("div", "col-md-4");
+        col.innerHTML = `
+            <div class="card">
+                <div class="card-body text-center">
+                    <h6>${title}</h6>
+                    <div class="display-6 fw-bold">${value.toLocaleString()}</div>
+                </div>
+            </div>
+        `;
+        return col;
+    }
+
+    cardsWrapper.appendChild(createStatCard("Aantal landen", total));
+    cardsWrapper.appendChild(createStatCard("Gem. populatie", avg));
+    cardsWrapper.appendChild(createStatCard("Populatie favorieten", fav));
+
+    // grafiek
+    const chartRow = createElement("div", "mt-3");
+    const card = createElement("div", "card");
+    const cardBody = createElement("div", "card-body");
+    const canvas = createElement("canvas");
+    canvas.id = "stats_chart";
+    canvas.style.maxHeight = "300px";
+
+    cardBody.appendChild(canvas);
+    card.appendChild(cardBody);
+    chartRow.appendChild(card);
+    container.appendChild(chartRow);
+
+    if (statsChart) statsChart.destroy();
+
+    statsChart = new Chart(canvas, {
+        type: "bar",
+        data: {
+            labels: ["Aantal landen", "Gem. populatie", "Favorieten populatie"],
+            datasets: [{
+                label: "Statistieken",
+                data: [total, avg, fav],
+                backgroundColor: ["#0d6efd", "#6c757d", "#ffc107"],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
 }
