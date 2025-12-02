@@ -41,8 +41,9 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
                           <p class="fw-light mb-0">Regio: ${country.region}</p>
                           <p class="fw-light">Populatie: ${(country.population).toLocaleString()}</p>
                           <div class="d-grid gap-2 d-md-flex justify-content-between">
-                                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#detailsModal-${country.cca3}">Details</button>
-                                <button class="btn btn-outline-warning btn-sm" type="button">☆ Favoriet</button>
+<button class="btn btn-primary btn-sm details-btn" type="button">
+    Details
+</button>                                <button class="btn btn-outline-warning btn-sm" type="button">☆ Favoriet</button>
                           </div>`;
 
         const detailsBtn = body.querySelector(".btn.btn-primary");
