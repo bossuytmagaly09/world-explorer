@@ -36,6 +36,8 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
         // - knop/icon voor favoriet (onFavoriteToggle(country))
         // - check of dit land in favorites zit (kleur/icoon aanpassen)
 
+        const isFav = favorites.some(f => f.cca3 === country.cca3);
+
         body.innerHTML = `
             <img src="${country.flags?.png || ''}" class="mb-3 card-img-top" alt="Vlag ${country.name?.common || ''}">
             <h5 class="card-title mb-2">${country.name.common}</h5>
