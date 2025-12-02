@@ -36,29 +36,34 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
         // - knop/icon voor favoriet (onFavoriteToggle(country))
         // - check of dit land in favorites zit (kleur/icoon aanpassen)
 
-        body.innerHTML = `<img src="${country.flags.png}" class="mb-1">
-                          <h5 class="card-title">${country.name.common}</h5>
-                          <p class="fw-light mb-0">Regio: ${country.region}</p>
-                          <p class="fw-light">Populatie: ${(country.population).toLocaleString()}</p>
-                          <div class="d-grid gap-2 d-md-flex justify-content-between">
-                                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#detailsModal-${country.cca3}">Details</button>
-                                <button class="btn btn-outline-warning btn-sm" type="button">☆ Favoriet</button>
-                          </div>`;
+        body.innerHTML = `
+            <img src="${country.flags?.png || ''}" class="mb-3 card-img-top" alt="Vlag ${country.name?.common || ''}">
+            <h5 class="card-title mb-2">${country.name.common}</h5>
+            <p class="fw-light mb-0">Regio: ${country.region}</p>
+            <p class="fw-light">Populatie: ${country.population?.toLocaleString() ?? '0'}</p>
 
-        const detailsBtn = body.querySelector(".btn.btn-primary");
-        const favBtn = body.querySelector(".btn.btn-outline-warning");
-
-        detailsBtn.addEventListener("click", () => {
-            onCountryClick(country);
-        });
-
-        favBtn.addEventListener("click", () => {
-            onFavoriteToggle(country);
-        });
+            <div class="d-grid gap-2 d-md-flex justify-content-between mt-2">
+                <button class="btn btn-primary btn-sm details-btn">Details</button>
+                <button class="btn ${isFav ? "btn-warning" : "btn-outline-warning"} btn-sm fav-btn">
+                    ${isFav ? "★ Verwijder" : "☆ Favoriet"}
+                </button>
+            </div>
+        `;
 
         card.appendChild(body);
         col.appendChild(card);
         container.appendChild(col);
 
+        // events
+        const detailsBtn = body.querySelector(".details-btn");
+        const favBtn = body.querySelector(".fav-btn");
+
+        detailsBtn?.addEventListener("click", () => {
+            onCountryClick?.(country);
+        });
+
+        favBtn?.addEventListener("click", () => {
+            onFavoriteToggle?.(country);
+        });
     });
 }
