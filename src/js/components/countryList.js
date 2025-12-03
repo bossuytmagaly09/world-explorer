@@ -1,15 +1,6 @@
 import { clearElement, createElement } from "../utils/dom.js";
 
-/**
- * Render de lijst van landen in #country_list.
- *
- * @param {Object} config
- * @param {Array} config.countries
- * @param {Array} config.favorites
- * @param {Function} config.onCountryClick
- * @param {Function} config.onFavoriteToggle
- */
-export function renderCountryList({ countries, favorites= [], onCountryClick, onFavoriteToggle }) {
+export function renderCountryList({ countries, favorites, onCountryClick, onFavoriteToggle }) {
     const container = document.querySelector("#country_list");
     if (!container) return;
 
@@ -32,11 +23,6 @@ export function renderCountryList({ countries, favorites= [], onCountryClick, on
         const card = createElement("div", "card h-100 shadow-sm border-0");
         const body = createElement("div", "card-body d-flex flex-column");
 
-        // TODO:
-        // - vlag, naam, regio, populatie tonen
-        // - knop "Details" die onCountryClick(country) oproept
-        // - knop/icon voor favoriet (onFavoriteToggle(country))
-        // - check of dit land in favorites zit (kleur/icoon aanpassen)
         const countryName = country.name?.common ?? "Onbekend land";
         const flagSrc = country.flags?.png ?? "";
         const population = typeof country.population === "number" ? country.population.toLocaleString() : "0";
@@ -57,30 +43,16 @@ export function renderCountryList({ countries, favorites= [], onCountryClick, on
         `;
 
         const detailsBtn = body.querySelector(".details-btn");
-        const favBtn = body.querySelector(".fav-btn")
+        const favBtn = body.querySelector(".fav-btn");
 
-        detailsBtn?.addEventListener("click", () => onCountryClick?.(country));
+        detailsBtn.addEventListener("click", () => onCountryClick(country));
 
-        favBtn?.addEventListener("click", () => {
-            // toggle de favoriet-status lokaal
-            const currentlyFav = favBtn.classList.contains("btn-warning");
-            if (currentlyFav) {
-                favBtn.classList.remove("btn-warning");
-                favBtn.classList.add("btn-outline-warning");
-                favBtn.textContent = "☆ Favoriet";
-            } else {
-                favBtn.classList.remove("btn-outline-warning");
-                favBtn.classList.add("btn-warning");
-                favBtn.textContent = "★ Verwijder";
-            }
-
-            onFavoriteToggle?.(country);
+        favBtn.addEventListener("click", () => {
+            onFavoriteToggle(country);
         });
-
 
         card.appendChild(body);
         col.appendChild(card);
         container.appendChild(col);
-
     });
 }

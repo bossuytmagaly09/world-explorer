@@ -105,12 +105,11 @@ function toggleFavorite(country) {
     const key = country.cca3;
     const index = favorites.findIndex((fav) => fav.cca3 === key);
 
-    if (index !== -1){
+    let isNowFavorite;
+
+    if (index !== -1) {
         favorites.splice(index, 1);
-        saveFavorites(favorites);
-        renderFavorites();
-        updateStats();
-        return false;
+        isNowFavorite = false;
     } else {
         favorites.push({
             name: country.name.common,
@@ -118,11 +117,22 @@ function toggleFavorite(country) {
             cca3: key,
             population: country.population ?? 0
         });
-        saveFavorites(favorites);
-        renderFavorites();
-        updateStats();
-        return true;
+        isNowFavorite = true;
     }
+
+    saveFavorites(favorites);
+    renderFavorites();
+    updateStats();
+
+
+    renderCountryList({
+        countries: filteredCountries,
+        favorites,
+        onCountryClick: handleCountryClick,
+        onFavoriteToggle: handleFavoriteToggleFromList
+    });
+
+    return isNowFavorite;
 }
 
 function isFavorite(country) {

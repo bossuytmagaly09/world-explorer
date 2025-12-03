@@ -7,9 +7,6 @@ let modalInstance = null;
 let currentCountry = null;
 let onFavoriteToggleCallback = null;
 
-/**
- * Initialiseert de modal (één keer aanroepen in main.js)
- */
 export function initCountryModal(onFavoriteToggle) {
     const modalElement = document.querySelector("#country_modal");
     if (!modalElement) return;
@@ -20,21 +17,18 @@ export function initCountryModal(onFavoriteToggle) {
     const favBtn = document.querySelector("#favorite_toggle_btn");
     if (favBtn) {
         favBtn.addEventListener("click", () => {
-            if (!currentCountry || typeof onFavoriteToggleCallback !== "function") return;
+            if (!currentCountry) return;
 
-
-            const returned = onFavoriteToggleCallback(currentCountry);
-
-
-            const newStatus = (typeof returned === "boolean") ? returned : isFavorite(currentCountry);
-
+            const newStatus = onFavoriteToggleCallback(currentCountry);
             updateFavoriteButton(newStatus);
         });
     }
 }
+
 function updateFavoriteButton(isFavorite) {
     const favBtn = document.querySelector("#favorite_toggle_btn");
     if (!favBtn) return;
+
     if (isFavorite) {
         favBtn.textContent = "★ Verwijder uit favorieten";
         favBtn.className = "btn btn-warning w-100";
@@ -44,11 +38,6 @@ function updateFavoriteButton(isFavorite) {
     }
 }
 
-/**
- * Toon de modal voor een bepaald land.
- * @param {Object} country
- * @param {boolean} isFavorite
- */
 export async function showCountryDetail(country, isFavorite) {
     if (!modalInstance || !country) return;
     currentCountry = country;
@@ -59,12 +48,6 @@ export async function showCountryDetail(country, isFavorite) {
     const alertBox = document.querySelector("#country_modal_alert");
     const currencyInfo = document.querySelector("#currency_info");
 
-
-    // TODO:
-    // - titel invullen (country.name.common)
-    // - vlag src/alt instellen
-    // - detailsDl leegmaken en opnieuw vullen met dt/dd voor:
-    //   hoofdstad, regio, populatie, talen, valuta
     clearElement(detailsDl);
     clearElement(currencyInfo);
 
@@ -73,7 +56,7 @@ export async function showCountryDetail(country, isFavorite) {
     flagImg.src = country.flags?.png ?? "";
     flagImg.alt = `Vlag van ${name}`;
 
-    function addDetail(label, value){
+    function addDetail(label, value) {
         const dt = createElement("dt", "col-sm-4 fw-bold", label);
         const dd = createElement("dd", "col-sm-8", value);
         detailsDl.appendChild(dt);
@@ -84,55 +67,36 @@ export async function showCountryDetail(country, isFavorite) {
     addDetail("Regio", country.region ?? "_");
     addDetail("Bevolking", typeof country.population === "number" ? country.population.toLocaleString("nl-NL") : "_");
     addDetail("Talen", country.languages ? Object.values(country.languages).join(", ") : "_");
-    addDetail("Valuta", country.currencies ? Object.entries(country.currencies).map(([c, obj]) => `${obj.name} (${c})`).join(", ") : "_");
+    addDetail(
+        "Valuta",
+        country.currencies
+            ? Object.entries(country.currencies).map(([c, obj]) => `${obj.name} (${c})`).join(", ")
+            : "_"
+    );
 
-
-
-    // TODO: alertBox verbergen of tonen afhankelijk van geodata (lat/lng)
-    // - lat/lng zoeken in country.latlng
-    // - als aanwezig: focusCountry(lat, lng, name)
-    // - anders: nette melding tonen en map eventueel "disable"-stijl geven
     const lat = country.latlng?.[0];
     const lng = country.latlng?.[1];
 
-    if (lat != null && lng != null){
+    if (lat != null && lng != null) {
         alertBox.classList.add("d-none");
-        alertBox.textContent = "";
-
         focusCountry(lat, lng, name);
-    }else{
+    } else {
         alertBox.classList.remove("d-none");
         alertBox.textContent = "Geen geografische data beschikbaar voor dit land.";
     }
 
-
-    // TODO: wisselkoers-info ophalen
-    // - eerste currency-code bepalen uit country.currencies
-    // - fetchRateToEuro(code) aanroepen
-    // - resultaat tonen in currencyInfo
-    // - foutmeldingen netjes afhandelen
-
-    if (country.currencies){
+    if (country.currencies) {
         const firstCurrencyCode = Object.keys(country.currencies)[0];
-
-        try{
+        try {
             const rate = await fetchRateToEuro(firstCurrencyCode);
             currencyInfo.textContent = `1 ${firstCurrencyCode} = ${rate} EUR`;
-        }catch (err){
-            currencyInfo.textContent = `Wisselkoers niet beschikbaar.`
+        } catch {
+            currencyInfo.textContent = "Wisselkoers niet beschikbaar.";
         }
-    }else{
-        currencyInfo.textContent = `Geen valuta_informatie beschikbaar.`
+    } else {
+        currencyInfo.textContent = "Geen valuta-informatie beschikbaar.";
     }
 
-    // TODO: tekst/appearance van favBtn aanpassen op basis van isFavorite
-
-
     updateFavoriteButton(Boolean(isFavorite));
-
     modalInstance.show();
-}
-function isFavorite(country) {
-
-    return Boolean(country?.isFavorite);
 }
