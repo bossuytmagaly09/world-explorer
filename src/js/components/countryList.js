@@ -29,18 +29,18 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
         const region = country.region ?? "_";
 
         body.innerHTML = `
-            <img src="${flagSrc}" class="mb-3 card-img-top" alt="Vlag ${countryName}">
-            <h5 class="card-title mb-2">${countryName}</h5>
-            <p class="fw-light mb-0">Regio: ${region}</p>
-            <p class="fw-light">Populatie: ${population}</p>
-
-            <div class="d-grid gap-2 d-md-flex justify-content-between mt-2">
-                <button class="btn btn-primary btn-sm details-btn">Details</button>
-                <button class="btn ${isFav ? "btn-warning" : "btn-outline-warning"} btn-sm fav-btn">
-                    ${isFav ? "★ Verwijder" : "☆ Favoriet"}
-                </button>
-            </div>
-        `;
+                        <img src="${flagSrc}" class="mb-3 card-img-top" alt="Vlag ${countryName}">
+                        <h5 class="card-title mb-2">${countryName}</h5>
+                        <p class="fw-light mb-0">Regio: ${region}</p>
+                        <p class="fw-light">Populatie: ${population}</p>
+                        <div class="mt-auto">
+                            <div class="d-grid gap-2 d-md-flex justify-content-between mt-2">
+                                <button class="btn btn-primary btn-sm details-btn">Details</button>
+                                <button class="btn ${isFav ? "btn-warning" : "btn-outline-warning"} btn-sm fav-btn">
+                                ${isFav ? "★ Verwijder" : "☆ Favoriet"}</button>
+                            </div>
+                        </div>
+                        `;
 
         const detailsBtn = body.querySelector(".details-btn");
         const favBtn = body.querySelector(".fav-btn");
