@@ -15,4 +15,35 @@ body {
 .bar {
   width: 100%;
   border-radius: 0.25rem 0.25rem 0 0;
+  transition: height 0.5s ease;
+  min-height: 7px;
+}
+
+.bar-blue {
+  background-color: #d3e1fc;
+  border: 1px solid #3770f4;
+}
+.bar-green {
+  background-color: #d5e6de;
+  border: 1px solid #408558;
+}
+.bar-yellow {
+  background-color: #fdf3d1;
+  border: 1px solid #f6c852;
+}
+.bar-chart-row > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 200px;
+}
+.bar-wrapper {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+.bar-container {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
 }

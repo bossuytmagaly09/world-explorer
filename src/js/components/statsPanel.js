@@ -32,11 +32,54 @@ export function renderStats(stats) {
     cardsRow.appendChild(card3);
     panel.appendChild(cardsRow);
 // Eenvoudige bar chart
-    const barRow = createElement("div", "row bar-chart-row");
+  //  const barRow = createElement("div", "row bar-chart-row");
 // TODO:
 // - bereken relatieve hoogtes (bijv. in procent)
 // - maak voor elk stat een "bar" div
+  //  panel.appendChild(barRow);
+
+    // ---------- Bar chart ----------
+    const barRow = createElement("div", "row text-center mt-1 bar-chart-row");
+
+// Bepaal max-waarde voor schaal
+    const maxValue = Math.max(totalCountries, averagePopulation, favoritesPopulation);
+
+// Helper om bar te maken
+    function createBar(label, value, colorClass) {
+        const col = createElement("div", "col-md-4 text-center");
+
+        // Kaart met alleen de bar
+        const wrapper = createElement("div", "border rounded p-2 bar-wrapper", "");
+
+        const bar = createElement("div", `bar ${colorClass}`);
+        bar.style.height = `${(value / maxValue) * 100}%`;
+
+        const barContainer = createElement("div", "bar-container");
+        barContainer.appendChild(bar);
+        wrapper.appendChild(barContainer);
+
+        // Label ONDER de kaart
+        const labelEl = createElement("div", "mt-2 text-muted", label);
+
+        col.appendChild(wrapper);   // eerst de container
+        col.appendChild(labelEl);   // dan de tekst eronder
+
+        return col;
+    }
+
+// Bars aanmaken
+    barRow.appendChild(
+        createBar("Aantal landen", totalCountries, "bar-blue")
+    );
+    barRow.appendChild(
+        createBar("Gem. populatie", averagePopulation, "bar-green")
+    );
+    barRow.appendChild(
+        createBar("Populatie favorieten", favoritesPopulation, "bar-yellow")
+    );
+
     panel.appendChild(barRow);
+
 }
 function createStatCard(label, valueText) {
     const col = createElement("div", "col-md-4");
