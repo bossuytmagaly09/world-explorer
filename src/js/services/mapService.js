@@ -61,7 +61,7 @@ export function focusCountry(lat, lng, name) {
 
     function doFocus() {
         try {
-            map.invalidateSize(); // forceren
+            map.invalidateSize();
             map.setView([lat, lng], 6);
 
             if (marker) map.removeLayer(marker);
@@ -69,7 +69,7 @@ export function focusCountry(lat, lng, name) {
             marker = L.marker([lat, lng]).addTo(map);
             marker.bindPopup(`<strong>${name}</strong>`).openPopup();
 
-            // extra safety invalidatie kort erna
+
             setTimeout(() => {
                 if (map) map.invalidateSize();
             }, 200);
@@ -84,7 +84,7 @@ export function focusCountry(lat, lng, name) {
         const w = container ? container.clientWidth : 0;
         const h = container ? container.clientHeight : 0;
 
-        // beschouw 'zichtbaar' zodra beide dimensies > 20px (voorkomt valse starts)
+
         if (w > 20 && h > 20) {
             doFocus();
         } else if (attempts <= maxAttempts) {

@@ -13,6 +13,7 @@ let onFavoriteToggleCallback = null;
 export function initCountryModal(onFavoriteToggle) {
     const modalElement = document.querySelector("#country_modal");
     if (!modalElement) return;
+
     modalInstance = new bootstrap.Modal(modalElement);
     onFavoriteToggleCallback = onFavoriteToggle;
 
@@ -31,10 +32,10 @@ export function initCountryModal(onFavoriteToggle) {
         });
     }
 }
-function updateFavoriteButton(isFav) {
+function updateFavoriteButton(isFavorite) {
     const favBtn = document.querySelector("#favorite_toggle_btn");
     if (!favBtn) return;
-    if (isFav) {
+    if (isFavorite) {
         favBtn.textContent = "★ Verwijder uit favorieten";
         favBtn.className = "btn btn-warning w-100";
     } else {
@@ -57,7 +58,6 @@ export async function showCountryDetail(country, isFavorite) {
     const detailsDl = document.querySelector("#country_details");
     const alertBox = document.querySelector("#country_modal_alert");
     const currencyInfo = document.querySelector("#currency_info");
-    const favBtn = document.querySelector("#favorite_toggle_btn");
 
 
     // TODO:
@@ -69,13 +69,13 @@ export async function showCountryDetail(country, isFavorite) {
     clearElement(currencyInfo);
 
     const name = country.name?.common ?? "Onbekend land";
-    title.textContent = country.name?.common ?? "Onbekend land";
-    flagImg.src = country.flags?.png || "";
-    flagImg.alt = `Vlag van ${country.name?.common ?? "land"}`;
+    title.textContent = name;
+    flagImg.src = country.flags?.png ?? "";
+    flagImg.alt = `Vlag van ${name}`;
 
     function addDetail(label, value){
-        const dt = createElement("dt",  "col-sm-4 fw-bold", label);
-        const dd = createElement("dd",  "col-sm-!", value);
+        const dt = createElement("dt", "col-sm-4 fw-bold", label);
+        const dd = createElement("dd", "col-sm-8", value);
         detailsDl.appendChild(dt);
         detailsDl.appendChild(dd);
     }
@@ -128,7 +128,7 @@ export async function showCountryDetail(country, isFavorite) {
     // TODO: tekst/appearance van favBtn aanpassen op basis van isFavorite
 
 
-    updateFavoriteButton(Boolean(isFav));
+    updateFavoriteButton(Boolean(isFavorite));
 
     modalInstance.show();
 }

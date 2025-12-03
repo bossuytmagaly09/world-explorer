@@ -59,25 +59,13 @@ function setupFilterHandlers() {
 }
 
 function applyFilters() {
-    // TODO:
-    // - zoekterm en regio uitlezen
-    // - filteredCountries opbouwen vanuit allCountries
-
-    // Voorbeeldstructuur:
-    // const term = searchInput.value.trim().toLowerCase();
-    // const region = regionSelect.value;
-    // filteredCountries = allCountries.filter(...);
-
-    const term = searchInput.value.trim().toLowerCase();
-    const region = regionSelect.value;
+    const term = (searchInput?.value || "").trim().toLowerCase();
+    const region = regionSelect?.value || "all";
 
     filteredCountries = allCountries.filter(country => {
-        const matchTerm =
-            country.name.common.toLowerCase().includes(term);
-
-        const matchRegion =
-            region === "all" || country.region === region;
-
+        const name = country.name?.common?.toLowerCase() || "";
+        const matchTerm = term === "" || name.includes(term);
+        const matchRegion = region === "all" || country.region === region;
         return matchTerm && matchRegion;
     });
 
@@ -88,7 +76,9 @@ function applyFilters() {
         onFavoriteToggle: handleFavoriteToggleFromList
     });
 
-    countriesCount.textContent = `${filteredCountries.length} landen`;
+    if (countriesCount) {
+        countriesCount.textContent = `${filteredCountries.length} landen`;
+    }
 
     updateStats();
 }
@@ -102,7 +92,7 @@ function handleFavoriteToggleFromList(country) {
 }
 
 function handleFavoriteToggleFromModal(country) {
-    toggleFavorite(country);
+    return toggleFavorite(country);
 }
 
 function toggleFavorite(country) {
@@ -146,11 +136,11 @@ function renderFavorites() {
     favoritesPanel.innerHTML = "";
 
     if (!favorites || favorites.length === 0) {
-        favoritesEmpty.classList.remove("d-none");
+        favoritesEmpty?.classList.remove("d-none");
         return;
     }
 
-    favoritesEmpty.classList.add("d-none");
+    favoritesEmpty?.classList.add("d-none");
 
     favorites.forEach((fav) => {
         const li = document.createElement("li");
