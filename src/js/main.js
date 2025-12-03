@@ -4,7 +4,6 @@ import '../scss/styles.scss'
 // Import all of Bootstrap’s JS
 import * as bootstrap from 'bootstrap'
 
-
 import { fetchAllCountries } from "./services/countriesService.js";
 import { initMap } from "./services/mapService.js";
 import { loadFavorites, saveFavorites } from "./services/storageService.js";
@@ -68,6 +67,19 @@ function applyFilters() {
     // const term = searchInput.value.trim().toLowerCase();
     // const region = regionSelect.value;
     // filteredCountries = allCountries.filter(...);
+
+    const term = searchInput.value.trim().toLowerCase();
+    const region = regionSelect.value;
+
+    filteredCountries = allCountries.filter(country => {
+        const matchTerm =
+            country.name.common.toLowerCase().includes(term);
+
+        const matchRegion =
+            region === "all" || country.region === region;
+
+        return matchTerm && matchRegion;
+    });
 
     renderCountryList({
         countries: filteredCountries,
