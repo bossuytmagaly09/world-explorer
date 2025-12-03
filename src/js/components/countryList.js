@@ -38,12 +38,15 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
 
         body.innerHTML = `<img src="${country.flags.png}" class="mb-1">
                           <h5 class="card-title">${country.name.common}</h5>
-                          <p class="fw-light mb-0">Regio: ${country.region}</p>
-                          <p class="fw-light">Populatie: ${(country.population).toLocaleString()}</p>
-                          <div class="d-grid gap-2 d-md-flex justify-content-between">
-<button class="btn btn-primary btn-sm details-btn" type="button">
-    Details
-</button>                                <button class="btn btn-outline-warning btn-sm" type="button">☆ Favoriet</button>
+                          <div>
+                            <p class="fw-light mb-0">Regio: ${country.region}</p>
+                            <p class="fw-light mb-3">Populatie: ${country.population.toLocaleString()}</p>
+                          </div>
+                          <div class="mt-auto">
+                              <div class="d-flex justify-content-between">
+                                  <button class="btn btn-primary btn-sm details-btn" type="button">Details</button>
+                                  <button class="btn btn-outline-warning btn-sm" type="button">☆ Favoriet</button>
+                              </div>
                           </div>`;
 
         const detailsBtn = body.querySelector(".btn.btn-primary");
