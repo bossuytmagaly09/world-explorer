@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 
 let map;
 let marker;
+let invalidateTimeout;
 
 /**
  * Initialiseert de Leaflet-kaart in #country_map.
@@ -19,14 +20,15 @@ export function initMap() {
     // Voorbeeld (mag aangepast worden door studenten):
     // map = L.map(mapContainer).setView([20, 0], 2);
     // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: ... }).addTo(map);
-    map = L.map(mapContainer).setView([40, 0], 2);
+
+    map = L.map(mapContainer).setView([20, 0], 2);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        attribution: '&copy; OpenStreetMap contributors',
         maxZoom: 19
     }).addTo(map);
 
-
+    // fallback om kaart te refreshen als container later zichtbaar wordt
     setTimeout(() => {
         if (map) map.invalidateSize();
     }, 300);
@@ -38,32 +40,62 @@ export function initMap() {
  * @param {number} lng
  * @param {string} name
  */
-let invalidateTimeout;
 export function focusCountry(lat, lng, name) {
     if (!map) return;
     if (typeof lat !== "number" || typeof lng !== "number") {
         console.warn("Ongeldige coördinaten voor focusCountry");
         return;
     }
-
     // TODO:
     // - map.setView([lat, lng], zoomLevel);
     // - bestaande marker verwijderen (indien aanwezig)
     // - nieuwe marker maken met popup-tekst (name)
+
     clearTimeout(invalidateTimeout);
-    invalidateTimeout = setTimeout(() => {
+
+    // poll totdat de map-container een redelijke grootte heeft
+    const container = document.querySelector("#country_map");
+    let attempts = 0;
+    const maxAttempts = 20; // 20 * 100ms = 2s max wachten
+    const pollInterval = 100;
+
+    function doFocus() {
         try {
-            map.invalidateSize();
+            map.invalidateSize(); // forceren
             map.setView([lat, lng], 6);
 
-            if (marker) {
-                map.removeLayer(marker);
-            }
+            if (marker) map.removeLayer(marker);
 
             marker = L.marker([lat, lng]).addTo(map);
             marker.bindPopup(`<strong>${name}</strong>`).openPopup();
+
+            // extra safety invalidatie kort erna
+            setTimeout(() => {
+                if (map) map.invalidateSize();
+            }, 200);
+
         } catch (e) {
             console.error("Map focus error:", e);
         }
-    }, 100); // 100ms is vaak genoeg, maar pas aan indien nodig
+    }
+
+    function attempt() {
+        attempts += 1;
+        const w = container ? container.clientWidth : 0;
+        const h = container ? container.clientHeight : 0;
+
+        // beschouw 'zichtbaar' zodra beide dimensies > 20px (voorkomt valse starts)
+        if (w > 20 && h > 20) {
+            doFocus();
+        } else if (attempts <= maxAttempts) {
+            invalidateTimeout = setTimeout(attempt, pollInterval);
+        } else {
+            // fallback: probeer toch te focussen
+            console.warn("Map container niet zichtbaar na wachten, probeer alsnog te focussen");
+            doFocus();
+        }
+    }
+
+    // start poll
+    attempt();
 }
