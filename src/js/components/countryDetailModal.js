@@ -19,10 +19,27 @@ export function initCountryModal(onFavoriteToggle) {
     const favBtn = document.querySelector("#favorite_toggle_btn");
     if (favBtn) {
         favBtn.addEventListener("click", () => {
-            if (currentCountry && typeof onFavoriteToggleCallback === "function") {
-                onFavoriteToggleCallback(currentCountry);
-            }
+            if (!currentCountry || typeof onFavoriteToggleCallback !== "function") return;
+
+
+            const returned = onFavoriteToggleCallback(currentCountry);
+
+
+            const newStatus = (typeof returned === "boolean") ? returned : isFavorite(currentCountry);
+
+            updateFavoriteButton(newStatus);
         });
+    }
+}
+function updateFavoriteButton(isFav) {
+    const favBtn = document.querySelector("#favorite_toggle_btn");
+    if (!favBtn) return;
+    if (isFav) {
+        favBtn.textContent = "★ Verwijder uit favorieten";
+        favBtn.className = "btn btn-warning w-100";
+    } else {
+        favBtn.textContent = "☆ Toevoegen aan favorieten";
+        favBtn.className = "btn btn-outline-warning w-100";
     }
 }
 
@@ -51,34 +68,23 @@ export async function showCountryDetail(country, isFavorite) {
     clearElement(detailsDl);
     clearElement(currencyInfo);
 
+    const name = country.name?.common ?? "Onbekend land";
     title.textContent = country.name?.common ?? "Onbekend land";
     flagImg.src = country.flags?.png || "";
     flagImg.alt = `Vlag van ${country.name?.common ?? "land"}`;
 
     function addDetail(label, value){
-        const dt = createElement("dt", {class: "col-sm-4 fw-bold"}, label);
-        const dd = createElement("dd", {class: "col-sm-!"}, value);
+        const dt = createElement("dt",  "col-sm-4 fw-bold", label);
+        const dd = createElement("dd",  "col-sm-!", value);
         detailsDl.appendChild(dt);
         detailsDl.appendChild(dd);
     }
 
-    const capital = country.capital?.[0] ?? "_";
-    const region = country.region ?? "_";
-    const population = country.population?.toLocaleString("nl-NL") ?? "_";
-
-    const languages = country.languages
-        ? Object.entries(country.languages).join(", ")
-        : "_";
-
-    const currencyEntries = country.currencies
-        ? Object.entries(country.currencies).map(([code, obj]) => `${obj.name} (${code})` ).join(", ")
-        : "_";
-
-    addDetail("Hoofdstad", capital);
-    addDetail("Regio", region);
-    addDetail("Bevolking", population);
-    addDetail("Talen", languages);
-    addDetail("Valuta", currencyEntries);
+    addDetail("Hoofdstad", country.capital?.[0] ?? "_");
+    addDetail("Regio", country.region ?? "_");
+    addDetail("Bevolking", typeof country.population === "number" ? country.population.toLocaleString("nl-NL") : "_");
+    addDetail("Talen", country.languages ? Object.values(country.languages).join(", ") : "_");
+    addDetail("Valuta", country.currencies ? Object.entries(country.currencies).map(([c, obj]) => `${obj.name} (${c})`).join(", ") : "_");
 
 
 
@@ -93,7 +99,7 @@ export async function showCountryDetail(country, isFavorite) {
         alertBox.classList.add("d-none");
         alertBox.textContent = "";
 
-        focusCountry(lat, lng, country.name.common);
+        focusCountry(lat, lng, name);
     }else{
         alertBox.classList.remove("d-none");
         alertBox.textContent = "Geen geografische data beschikbaar voor dit land.";
@@ -121,15 +127,12 @@ export async function showCountryDetail(country, isFavorite) {
 
     // TODO: tekst/appearance van favBtn aanpassen op basis van isFavorite
 
-    if (isFavorite){
-        favBtn.textContent = `★ Verwijder uit favorieten`;
-        favBtn.classList.add("btn-warning");
-        favBtn.classList.add("btn-outline warning");
-    }else{
-        favBtn.textContent = `★ Toevoegen aan favorieten`;
-        favBtn.classList.add("btn-warning");
-        favBtn.classList.add("btn-outline-warning");
-    }
+
+    updateFavoriteButton(Boolean(isFav));
 
     modalInstance.show();
+}
+function isFavorite(country) {
+
+    return Boolean(country?.isFavorite);
 }

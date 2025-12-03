@@ -112,9 +112,27 @@ function toggleFavorite(country) {
     // - anders: toevoegen (met minimaal name, region, cca3)
 
     // saveFavorites(favorites);
+    const key = country.cca3;
+    const index = favorites.findIndex((fav) => fav.cca3 === key);
 
-    renderFavorites();
-    updateStats();
+    if (index !== -1){
+        favorites.splice(index, 1);
+        saveFavorites(favorites);
+        renderFavorites();
+        updateStats();
+        return false;
+    } else {
+        favorites.push({
+            name: country.name.common,
+            region: country.region,
+            cca3: key,
+            population: country.population ?? 0
+        });
+        saveFavorites(favorites);
+        renderFavorites();
+        updateStats();
+        return true;
+    }
 }
 
 function isFavorite(country) {
