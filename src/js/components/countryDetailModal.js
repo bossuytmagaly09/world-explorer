@@ -58,7 +58,8 @@ export async function showCountryDetail(country, isFavorite) {
 
     function addDetail(label, value) {
         const dt = createElement("dt", "col-sm-4 fw-bold", label);
-        const dd = createElement("dd", "col-sm-8", value);
+        const dd = createElement("dd", "col-sm-8");
+        dd.innerHTML = value;
         detailsDl.appendChild(dt);
         detailsDl.appendChild(dd);
     }
@@ -70,7 +71,7 @@ export async function showCountryDetail(country, isFavorite) {
     addDetail(
         "Valuta",
         country.currencies
-            ? Object.entries(country.currencies).map(([c, obj]) => `${obj.name} (${c})`).join(", ")
+            ? Object.entries(country.currencies).map(([c, obj]) => `${c} – ${obj.name}`).join("<br>")
             : "_"
     );
 
@@ -87,12 +88,21 @@ export async function showCountryDetail(country, isFavorite) {
 
     if (country.currencies) {
         const firstCurrencyCode = Object.keys(country.currencies)[0];
+        const currencyData = country.currencies[firstCurrencyCode];
+
+        const currencyNameText = `${firstCurrencyCode} – ${currencyData.name}`;
+        const currencyNameElement = createElement("div", "fw-bold", `Valuta: ${currencyNameText}`);
+        currencyInfo.appendChild(currencyNameElement);
+
         try {
             const rate = await fetchRateToEuro(firstCurrencyCode);
-           // currencyInfo.textContent = `1 ${firstCurrencyCode} = ${rate.toFixed(3)} EUR`;
-            currencyInfo.textContent = `1 EUR ≈ ${rate.toFixed(3)} ${firstCurrencyCode}`;
+
+            const rateTextElement = createElement("div", "mt-1", `1 EUR ≈ ${rate.toFixed(3)} ${firstCurrencyCode}`);
+            currencyInfo.appendChild(rateTextElement);
+
         } catch {
-            currencyInfo.textContent = "Wisselkoers niet beschikbaar.";
+            const errorElement = createElement("div", "mt-1", "Wisselkoers niet beschikbaar.");
+            currencyInfo.appendChild(errorElement);
         }
     } else {
         currencyInfo.textContent = "Geen valuta-informatie beschikbaar.";
