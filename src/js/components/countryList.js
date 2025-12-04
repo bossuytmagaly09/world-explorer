@@ -28,6 +28,8 @@ export function renderCountryList({ countries, favorites, onCountryClick, onFavo
         const population = typeof country.population === "number" ? country.population.toLocaleString() : "0";
         const region = country.region ?? "_";
 
+        const isFav = favorites.some(f => f.cca3 === country.cca3);
+
         body.innerHTML = `
                         <img src="${flagSrc}" class="mb-3 card-img-top" alt="Vlag ${countryName}">
                         <h5 class="card-title mb-2">${countryName}</h5>
