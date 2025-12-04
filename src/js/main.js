@@ -156,14 +156,22 @@ function renderFavorites() {
         const li = document.createElement("li");
         li.className = "list-group-item d-flex justify-content-between align-items-center";
 
-        li.textContent = `${fav.name} (${fav.region})`;
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = `${fav.name} (${fav.region})`;
 
-        li.addEventListener("click", () => {
+        const detailsBtn = document.createElement("button");
+        detailsBtn.className = "btn btn-sm btn-secondary rounded-pill";
+        detailsBtn.textContent = "Details";
+
+        detailsBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
             const country = allCountries.find((c) => c.cca3 === fav.cca3);
             if (country) {
-                handleCountryClick(country);
+                showCountryDetail(country, true);
             }
         });
+
+        li.append(nameSpan, detailsBtn);
         favoritesPanel.appendChild(li);
     });
 }
