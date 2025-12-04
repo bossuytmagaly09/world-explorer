@@ -11,11 +11,11 @@ import { calculateStats } from "./services/statsService.js";
 import { renderCountryList } from "./components/countryList.js";
 import { initCountryModal, showCountryDetail } from "./components/countryDetailModal.js";
 import { renderStats } from "./components/statsPanel.js";
-// Globale state
+
 let allCountries = [];
 let filteredCountries = [];
 let favorites = [];
-// DOM refs
+
 const searchInput = document.querySelector("#search_input");
 const regionSelect = document.querySelector("#region_filter");
 const statusMessage = document.querySelector("#status_message");
@@ -96,12 +96,6 @@ function handleFavoriteToggleFromModal(country) {
 }
 
 function toggleFavorite(country) {
-    // TODO:
-    // - key bepalen (bijv. country.cca3)
-    // - indien al aanwezig in favorites: verwijderen
-    // - anders: toevoegen (met minimaal name, region, cca3)
-
-    // saveFavorites(favorites);
     const key = country.cca3;
     const index = favorites.findIndex((fav) => fav.cca3 === key);
 

@@ -46,17 +46,12 @@ export function focusCountry(lat, lng, name) {
         console.warn("Ongeldige coördinaten voor focusCountry");
         return;
     }
-    // TODO:
-    // - map.setView([lat, lng], zoomLevel);
-    // - bestaande marker verwijderen (indien aanwezig)
-    // - nieuwe marker maken met popup-tekst (name)
 
     clearTimeout(invalidateTimeout);
 
-    // poll totdat de map-container een redelijke grootte heeft
     const container = document.querySelector("#country_map");
     let attempts = 0;
-    const maxAttempts = 20; // 20 * 100ms = 2s max wachten
+    const maxAttempts = 20;
     const pollInterval = 100;
 
     function doFocus() {
@@ -84,18 +79,14 @@ export function focusCountry(lat, lng, name) {
         const w = container ? container.clientWidth : 0;
         const h = container ? container.clientHeight : 0;
 
-
         if (w > 20 && h > 20) {
             doFocus();
         } else if (attempts <= maxAttempts) {
             invalidateTimeout = setTimeout(attempt, pollInterval);
         } else {
-            // fallback: probeer toch te focussen
             console.warn("Map container niet zichtbaar na wachten, probeer alsnog te focussen");
             doFocus();
         }
     }
-
-    // start poll
     attempt();
 }

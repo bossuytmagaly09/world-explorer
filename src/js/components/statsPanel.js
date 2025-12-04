@@ -15,7 +15,6 @@ export function renderStats(stats) {
 
     const { totalCountries, averagePopulation, favoritesPopulation } = stats;
 
-    // Kaarten met cijfers
     const cardsRow = createElement("div", "row gy-3 mb-3");
 
     const card1 = createStatCard("Aantal landen", totalCountries.toString());
@@ -31,20 +30,11 @@ export function renderStats(stats) {
     cardsRow.appendChild(card2);
     cardsRow.appendChild(card3);
     panel.appendChild(cardsRow);
-// Eenvoudige bar chart
-  //  const barRow = createElement("div", "row bar-chart-row");
-// TODO:
-// - bereken relatieve hoogtes (bijv. in procent)
-// - maak voor elk stat een "bar" div
-  //  panel.appendChild(barRow);
 
-    // ---------- Bar chart ----------
     const barRow = createElement("div", "row text-center mt-1 bar-chart-row");
 
-// Bepaal max-waarde voor schaal
     const maxValue = Math.max(totalCountries, averagePopulation, favoritesPopulation);
 
-// Helper om bar te maken
     function createBar(label, value, colorClass) {
         const col = createElement("div", "col-md-4 text-center");
 
@@ -58,7 +48,6 @@ export function renderStats(stats) {
         barContainer.appendChild(bar);
         wrapper.appendChild(barContainer);
 
-        // Label ONDER de kaart
         const labelEl = createElement("div", "mt-2 text-muted", label);
 
         col.appendChild(wrapper);   // eerst de container
@@ -67,7 +56,6 @@ export function renderStats(stats) {
         return col;
     }
 
-// Bars aanmaken
     barRow.appendChild(
         createBar("Aantal landen", totalCountries, "bar-blue")
     );

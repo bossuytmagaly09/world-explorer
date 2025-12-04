@@ -5,11 +5,7 @@ const EXCHANGE_API_BASE = "https://open.er-api.com/v6/latest";
  * @returns {Promise<number|null>} wisselkoers of null bij fout
  */
 export async function fetchRateToEuro(currencyCode) {
-// TODO:
-// - bouw URL op met ?base=EUR&symbols=CURRENCY
-// - gebruik fetch + async/await
-// - haal de juiste rate uit data.rates[currencyCode]
-// - geef null terug bij fout
+
     try{
         const url = `${EXCHANGE_API_BASE}/EUR?symbols=${currencyCode}`;
 
@@ -33,10 +29,6 @@ export async function fetchRateToEuro(currencyCode) {
  * @param {Array} favorites lijst van favorieten
  */
 export function calculateStats(countries, favorites) {
-    // TODO:
-    // - totalCountries
-    // - averagePopulation
-    // - favoritesPopulation
     const totalCountries = countries.length;
 
     const averagePopulation = totalCountries > 0
@@ -45,9 +37,7 @@ export function calculateStats(countries, favorites) {
             totalCountries
         )
         : 0;
-
     const favoritesPopulation = favorites.reduce((sum, fav) => sum + (fav.population ?? 0),0);
-
 
     return {
         totalCountries,

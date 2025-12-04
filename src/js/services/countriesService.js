@@ -10,12 +10,9 @@ const COUNTRIES_API_URL = "https://restcountries.com/v3.1/all?fields=name,capita
 
 
 export async function fetchAllCountries() {
-// TODO:
-// - gebruik fetch om COUNTRIES_API_URL op te halen
-// - controleer res.ok
-// - parse JSON en geef de array terug
-// - gooi een fout bij problemen
+
     const res = await fetch(COUNTRIES_API_URL);
+
     if (!res.ok) throw new Error("fetchAllCountries() is nog niet geïmplementeerd");
     return await res.json();
 }

@@ -4,10 +4,7 @@ const STORAGE_KEY = "world-explorer-favorites";
  * @returns {Array} lijst van favoriete landen (of lege array)
  */
 export function loadFavorites() {
-// TODO:
-// - lees uit localStorage met STORAGE_KEY
-// - parse JSON
-// - ga veilig om met null / parse errors
+
     try{
         const json = localStorage.getItem(STORAGE_KEY);
         if(!json) return [];
@@ -26,9 +23,6 @@ export function loadFavorites() {
  * @param {Array} favorites
  */
 export function saveFavorites(favorites) {
-// TODO:
-// - stringify favorites
-// - schrijf naar localStorage
     try {
         const json = JSON.stringify(favorites);
         localStorage.setItem(STORAGE_KEY, json);
