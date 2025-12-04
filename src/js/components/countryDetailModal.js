@@ -87,22 +87,35 @@ export async function showCountryDetail(country, isFavorite) {
     }
 
     if (country.currencies) {
-        const firstCurrencyCode = Object.keys(country.currencies)[0];
-        const currencyData = country.currencies[firstCurrencyCode];
+        const entries = Object.entries(country.currencies);
 
-        const currencyNameText = `${firstCurrencyCode} – ${currencyData.name}`;
-        const currencyNameElement = createElement("div", "fw-bold", `Valuta: ${currencyNameText}`);
-        currencyInfo.appendChild(currencyNameElement);
+        for (const [code, data] of entries) {
 
-        try {
-            const rate = await fetchRateToEuro(firstCurrencyCode);
+            const currencyTitle = createElement(
+                "div",
+                "fw-bold mt-2",
+                `Valuta: ${code} – ${data.name}`
+            );
+            currencyInfo.appendChild(currencyTitle);
 
-            const rateTextElement = createElement("div", "mt-1", `1 EUR ≈ ${rate.toFixed(3)} ${firstCurrencyCode}`);
-            currencyInfo.appendChild(rateTextElement);
+            try {
+                const rate = await fetchRateToEuro(code);
 
-        } catch {
-            const errorElement = createElement("div", "mt-1", "Wisselkoers niet beschikbaar.");
-            currencyInfo.appendChild(errorElement);
+                const rateText = createElement(
+                    "div",
+                    "ms-2",
+                    `1 EUR ≈ ${rate.toFixed(3)} ${code}`
+                );
+                currencyInfo.appendChild(rateText);
+
+            } catch {
+                const errorText = createElement(
+                    "div",
+                    "ms-2",
+                    "Wisselkoers niet beschikbaar."
+                );
+                currencyInfo.appendChild(errorText);
+            }
         }
     } else {
         currencyInfo.textContent = "Geen valuta-informatie beschikbaar.";
