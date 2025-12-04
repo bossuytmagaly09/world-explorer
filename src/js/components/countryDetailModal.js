@@ -89,7 +89,8 @@ export async function showCountryDetail(country, isFavorite) {
         const firstCurrencyCode = Object.keys(country.currencies)[0];
         try {
             const rate = await fetchRateToEuro(firstCurrencyCode);
-            currencyInfo.textContent = `1 ${firstCurrencyCode} = ${rate} EUR`;
+           // currencyInfo.textContent = `1 ${firstCurrencyCode} = ${rate.toFixed(3)} EUR`;
+            currencyInfo.textContent = `1 EUR ≈ ${rate.toFixed(3)} ${firstCurrencyCode}`;
         } catch {
             currencyInfo.textContent = "Wisselkoers niet beschikbaar.";
         }
