@@ -12,15 +12,6 @@ export function initMap() {
     const mapContainer = document.querySelector("#country_map");
     if (!mapContainer) return;
 
-    // TODO:
-    // - maak een Leaflet map
-    // - stel een globale view in (bijv. wereldkaart)
-    // - voeg OSM-tiles toe
-
-    // Voorbeeld (mag aangepast worden door studenten):
-    // map = L.map(mapContainer).setView([20, 0], 2);
-    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: ... }).addTo(map);
-
     map = L.map(mapContainer).setView([20, 0], 2);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
